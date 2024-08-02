@@ -45,6 +45,8 @@ It utilizes the groq api to generate a commit message based on the current git r
 		}
 		client := groq.NewClient(os.Getenv("GROQ_KEY"), http.DefaultClient)
 		resp, err := client.Chat(groq.ChatRequest{
+			Model:  "llama-3.1-405b-reasoning",
+			Stream: false,
 			Messages: []groq.Message{
 				{
 					Role:    "system",
