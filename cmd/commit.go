@@ -12,8 +12,6 @@ import (
 
 // commit commits the change.
 func commit(resp *groq.ChatResponse) error {
-
-	// split the response into lines
 	lines := strings.Split(resp.Choices[0].Message.Content, "\n")
 	ms := huh.NewMultiSelect[string]()
 	opts := huh.NewOptions[string]()
@@ -24,11 +22,11 @@ func commit(resp *groq.ChatResponse) error {
 			Value: line,
 		})
 	}
-	var commitMessages *[]string
+	var commitMessages []string
 	ms.Options(opts...)
 	ms.Title("Select a commit message.")
 	ms.Limit(10)
-	ms.Value(commitMessages)
+	ms.Value(&commitMessages)
 	err := ms.Run()
 	if err != nil {
 		return err
@@ -41,8 +39,9 @@ func commit(resp *groq.ChatResponse) error {
 	}
 	defer os.Remove(tmpFile.Name())
 
+	body := strings.Join(commitMessages, "\n")
 	// Write the selected messages to the temporary file
-	_, err = tmpFile.Write(toBody(commitMessages))
+	_, err = tmpFile.Write([]byte(body))
 	if err != nil {
 		return err
 	}
@@ -81,12 +80,4 @@ func commit(resp *groq.ChatResponse) error {
 		fmt.Println("Commit message is empty, commit aborted.")
 	}
 	return nil
-}
-
-func toBody(commitMessages *[]string) []byte {
-	var body string
-	for _, commitMessage := range *commitMessages {
-		body += commitMessage + "\n"
-	}
-	return []byte(body)
 }

@@ -20,7 +20,7 @@ func fillTemplate(w io.Writer, diff string) error {
 // It returns an error if the diff cannot be retrieved.
 // Equivalent to `git diff --cached`.
 func getDiff() (string, error) {
-	cmd := exec.Command("git", "diff", "--cached")
+	cmd := exec.Command("git", "diff", "--cached", "--", ":!go.sum")
 	w := bytes.NewBuffer([]byte{})
 	ew := bytes.NewBuffer([]byte{})
 	cmd.Stdout = w
