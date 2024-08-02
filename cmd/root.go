@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"html/template"
-	"log"
 	"os"
 
 	_ "embed"
@@ -68,7 +67,10 @@ It utilizes the groq api to generate a commit message based on the current git r
 		if err != nil {
 			return err
 		}
-		log.Println(resp)
+		err = commit(resp)
+		if err != nil {
+			return err
+		}
 		return nil
 	},
 }
