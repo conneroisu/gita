@@ -1,9 +1,9 @@
 module github.com/conneroisu/gita
 
-go 1.22.4
+go 1.22.5
 
 require (
-	github.com/conneroisu/go-groq v0.0.0-20240421191901-c673d264387b
+	github.com/conneroisu/groq-go v0.8.8
 	github.com/spf13/cobra v1.8.1
 )
 

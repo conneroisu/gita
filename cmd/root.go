@@ -1,18 +1,16 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"html/template"
-	"net/http"
+	"log"
 	"os"
 
 	_ "embed"
 
-	groq "github.com/conneroisu/go-groq"
+	groq "github.com/conneroisu/groq-go"
 	"github.com/spf13/cobra"
 )
 
@@ -30,12 +28,14 @@ var rootCmd = &cobra.Command{
 Gita is a groq based git commit message generator.
 	
 It utilizes the groq api to generate a commit message based on the current git repository state.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
 	RunE: func(cmd *cobra.Command, args []string) error {
+		ctx := context.Background()
 		diff, err := getDiff()
 		if err != nil {
 			return err
+		}
+		if len(diff) < 9 {
+			return fmt.Errorf("no diff found")
 		}
 		fmt.Println(diff)
 		w := bytes.NewBuffer([]byte{})
@@ -43,21 +43,32 @@ It utilizes the groq api to generate a commit message based on the current git r
 		if err != nil {
 			return err
 		}
-		client := groq.NewClient(os.Getenv("GROQ_KEY"), http.DefaultClient)
-		resp, err := client.Chat(groq.ChatRequest{
-			Model:  "llama-3.1-405b-reasoning",
-			Stream: false,
+		client, err := groq.NewClient(os.Getenv("GROQ_KEY"))
+		if err != nil {
+			return err
+		}
+		resp, err := client.Chat(ctx, groq.ChatRequest{
+			Model: "llama3-8b-8192",
 			Messages: []groq.Message{
 				{
 					Role:    "system",
 					Content: w.String(),
 				},
 			},
+			TopP:      0.9,
+			MaxTokens: 1024,
+			Stop:      nil,
+			Stream:    false,
+			Format: struct {
+				Type groq.Format "json:\"type\""
+			}{
+				Type: groq.FormatText,
+			},
 		})
 		if err != nil {
 			return err
 		}
-		cmd.Println(resp.Choices[0].Message.Content)
+		log.Println(resp)
 		return nil
 	},
 }
@@ -72,13 +83,5 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gita.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

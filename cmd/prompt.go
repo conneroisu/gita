@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"bytes"
+	"errors"
 	"io"
-	"os"
 	"os/exec"
 )
 
@@ -22,11 +22,15 @@ func fillTemplate(w io.Writer, diff string) error {
 func getDiff() (string, error) {
 	cmd := exec.Command("git", "diff", "--cached")
 	w := bytes.NewBuffer([]byte{})
+	ew := bytes.NewBuffer([]byte{})
 	cmd.Stdout = w
-	cmd.Stderr = os.Stderr
+	cmd.Stderr = ew
 	err := cmd.Run()
 	if err != nil {
 		return "", err
+	}
+	if ew.Len() > 0 {
+		return "", errors.New(ew.String())
 	}
 	return w.String(), nil
 }

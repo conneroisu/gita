@@ -1,5 +1,5 @@
-github.com/conneroisu/go-groq v0.0.0-20240421191901-c673d264387b h1:45UaRc5/AEcLHCarqQlEWUNLKY4oqfwjSjRYh608PE4=
-github.com/conneroisu/go-groq v0.0.0-20240421191901-c673d264387b/go.mod h1:FjzCpDP2KqMl0RrvQEfRWgB98lMmAzYcc6VruG5Ivcg=
+github.com/conneroisu/groq-go v0.8.8 h1:4S7NrTU9Cweje6BBvrZOvQdky4mXCHjHopqW8RHurTc=
+github.com/conneroisu/groq-go v0.8.8/go.mod h1:py4wWB3xyRpl6NZTiASfpjMglFb0RiYKbeNs9xbY9uI=
 github.com/cpuguy83/go-md2man/v2 v2.0.4/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
